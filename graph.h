@@ -19,17 +19,18 @@ struct edge{
 
 template<class T>
 class graph{
-    friend std::ostream& operator<<(std::ostream&,const graph<T>&);
+    //friend std::ostream& operator<<(std::ostream&,const graph<T>&);
+    friend bool operator==(const graph<T>&,const graph<T>&);
+    friend bool operator!=(const graph<T>&,const graph<T>&);
     private:
         std::vector<vertex<T>> vertices;
         std::vector<edge<T>> edges;
         int size;
     public:
-        /*graph<T>() : size(0){};
-        graph<T>(const graph<T>&);
-        bool operator==(const graph<T>&);
-        bool operator!=(const graph<T>&);
-        void operator+(const graph<T>&);
+        graph<T>() : size(0){};
+        /*graph<T>(const graph<T>&);*/
+        
+        /*void operator+(const graph<T>&);
         graph<T>& operator+=(const graph<T>&);*/
         void insert_vertex(T);
         void insert_edge(int,T,T,bool bidirectional = true);
