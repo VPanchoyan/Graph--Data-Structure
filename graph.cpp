@@ -1,34 +1,89 @@
 #include "graph.h"
-#include <set>
-#include <vector>
 
-bool graph::operator==(const graph&);
-bool graph::operator!=(const graph&);
-void graph::operator+(const graph&);
-graph& operator+=(const graph&);
-void graph::insert_vertex(int new_vertex_val){
-    if(std::__count_if(this->vertices.begin(), this->vertices.end(), new_vertex_val)){
-        std::cout << "Vertex already exists." << std::endl;
-        return;
+//template<class T>
+//bool graph<T>::operator==(const graph<T>&);
+//
+//template<class T>
+//bool graph<T>::operator!=(const graph<T>&);
+//
+//template<class T>
+//void graph<T>::operator+(const graph<T>&);
+//
+//template<class T>
+//graph<T>& operator+=(const graph<T>&);
+
+template<class T>
+void graph<T>::insert_vertex(T new_vertex_val){
+    for (auto it = this->vertices.begin(); it != this->vertices.end(); ++it) {
+        if ((*it).value == new_vertex_val) {
+            std::cout << "Vertex " << new_vertex_val << " already exists." << std::endl;
+            return;
+        }
     }
-    vertex new_vertex_val(new_vertex_val);
-    this->vertices.push_back(new_vertex_val);
+    vertex<T> new_vx_val(new_vertex_val);
+    this->vertices.push_back(new_vx_val);
     ++(this->size);
 }
-void graph::insert_edge(int weight,vertex& v1,vertex& v2){
-    if(std::__count_if(v1.links.begin(),v1.links.end(),&v2) || std::__count_if(v2.links.begin(),v2.links.end(),&v1)){
-        std::cout << "Edge already exists." << std::endl;
+
+template<class T>
+void graph<T>::insert_edge(int weight,T v1,T v2,bool bidirectional){
+    vertex<T> ver1;
+    vertex<T> ver2;
+    for (auto it = this->vertices.begin(); it != this->vertices.end(); ++it) {
+        if ((*it).value == v1) {
+            ver1 = *it;
+        }
+        if ((*it).value == v2) {
+            ver2 = *it;
+        }
+    }        
+    if (ver1.value == v1 && ver2.value == v2) {
+        for (auto it = this->edges.begin(); it != this->edges.end(); ++it) {
+            if ((*it).left == v1 && (*it).right == v2) {
+                std::cout << "Edge already exists." << std::endl;
+                return;
+            }
+        }
+        edge<T> new_edge(weight,v1,v2);
+        this->edges.push_back(new_edge);
+        if (bidirectional) {
+            ver1.links.push_back(ver2);
+            ver2.links.push_back(ver1);
+        }
+        else {
+            ver1.links.push_back(ver2);
+        }
+    }
+    else {
+        std::cout << "No vertices to connect." << std::endl;
         return;
     }
-    edge new_edge(weight,v1,v2);
-    this->edges.push_back(new_edge);
-    v1.links.push_back(v2);
 }
-std::vector<vertex> graph::get_vertex_set();
-std::vector<edge> graph::get_edge_set();
-void graph::erase_vertex(vertex&);
-void graph::erase_edge(edge&);
-int graph::get_number_of_vertex();
-void graph::DFS();
-void graph::BFS();
-int graph::find_path(vertex,vertex);
+
+template<class T>
+std::vector<vertex<T>> graph<T>::get_vertex_set() {
+    return this->vertices;
+}
+
+template<class T>
+std::vector<edge<T>> graph<T>::get_edge_set() {
+    return this->edges;
+}
+
+//template<class T>
+//void graph<T>::erase_vertex(T);
+//
+//template<class T>
+//void graph<T>::erase_edge(T,T);
+//
+//template<class T>
+//int graph<T>::get_number_of_vertex();
+//
+//template<class T>
+//void graph<T>::DFS();
+//
+//template<class T>
+//void graph<T>::BFS();
+//
+//template<class T>
+//int graph<T>::find_path(T,T);

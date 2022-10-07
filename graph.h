@@ -1,41 +1,44 @@
 #include <iostream>
 #include <vector>
-#include <set>
 
+template<class T>
 struct vertex{
-    vertex(int vertex_value) : value(vertex_value){}
-    int value;
+    vertex(){}
+    vertex(T vertex_value) : value(vertex_value){}
+    T value;
     std::vector<vertex> links;
 };
 
+template<class T>
 struct edge{
-    edge(int w,vertex& v1,vertex& v2) : weight(w),left(&v1),right(&v2){}
+    edge(int w,T v1,T v2) : weight(w), left(v1),right(v2) {}
+    T left;
+    T right;
     int weight;
-    vertex* left;
-    vertex* right;
 };
 
+template<class T>
 class graph{
-    friend std::ostream& operator<<(const std::ostream&,const graph&);
+    //friend std::ostream& operator<<(const std::ostream&,const graph<T>&);
     private:
-        std::vector<vertex> vertices;
-        std::vector<edge> edges;
+        std::vector<vertex<T>> vertices;
+        std::vector<edge<T>> edges;
         int size;
     public:
-        graph() : size(0){};
-        graph(const graph&);
-        bool operator==(const graph&);
-        bool operator!=(const graph&);
-        void operator+(const graph&);
-        graph& operator+=(const graph&);
-        void insert_vertex(int);
-        void insert_edge(int,vertex&,vertex&);
-        std::vector<vertex> get_vertex_set();
-        std::vector<edge> get_edge_set();
-        void erase_vertex(vertex&);
-        void erase_edge(edge&);
+        /*graph<T>() : size(0){};
+        graph<T>(const graph<T>&);
+        bool operator==(const graph<T>&);
+        bool operator!=(const graph<T>&);
+        void operator+(const graph<T>&);
+        graph<T>& operator+=(const graph<T>&);*/
+        void insert_vertex(T);
+        void insert_edge(int,T,T,bool bidirectional = true);
+        std::vector<vertex<T>> get_vertex_set();
+        std::vector<edge<T>> get_edge_set();
+        /*void erase_vertex(T);
+        void erase_edge(T,T);
         int get_number_of_vertex();
         void DFS();
         void BFS();
-        int find_path(vertex,vertex);
+        int find_path(T,T);*/
 };
