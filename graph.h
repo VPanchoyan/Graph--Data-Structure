@@ -19,7 +19,7 @@ struct edge{
 
 template<class T>
 class graph{
-    //friend std::ostream& operator<<(const std::ostream&,const graph<T>&);
+    friend std::ostream& operator<<(std::ostream&,const graph<T>&);
     private:
         std::vector<vertex<T>> vertices;
         std::vector<edge<T>> edges;
@@ -35,10 +35,11 @@ class graph{
         void insert_edge(int,T,T,bool bidirectional = true);
         std::vector<vertex<T>> get_vertex_set();
         std::vector<edge<T>> get_edge_set();
-        /*void erase_vertex(T);
+        void erase_vertex(T);
         void erase_edge(T,T);
-        int get_number_of_vertex();
+        /*int get_number_of_vertex();
         void DFS();
         void BFS();
         int find_path(T,T);*/
+        void print_graph();
 };
