@@ -12,7 +12,8 @@ int main() {
 	g.insert_edge(1, 'a', 'b');
 	g.insert_edge(1, 'b', 'c');
 	g.insert_edge(1, 'd', 'a');
-	//g.erase_edge('a', 'b');
-	//g.print_graph();
+	g.erase_edge('a', 'b');
+	g.erase_vertex('c');
+	g.print_graph();
 	return 0;
 }
