@@ -1,46 +1,33 @@
+#pragma once
 #include <iostream>
 #include <vector>
 
-template<class T>
-struct vertex{
-    vertex(){}
-    vertex(T vertex_value) : value(vertex_value){}
-    T value;
-    std::vector<vertex> links;
+
+struct adjacent_vertex {
+	adjacent_vertex() : weight(0),value(NULL),connect(nullptr) {}
+	int weight;
+	int value;
+	adjacent_vertex* connect;
 };
 
-template<class T>
-struct edge{
-    edge(int w,T v1,T v2) : weight(w), left(v1),right(v2) {}
-    T left;
-    T right;
-    int weight;
+struct vertex {
+	vertex(int val) : value(val),connections_head(nullptr) {}
+	int value;
+	adjacent_vertex* connections_head;
 };
 
-template<class T>
-class graph{
-    //friend std::ostream& operator<<(std::ostream&,const graph<T>&);
-    friend bool operator==(const graph<T>&,const graph<T>&);
-    friend bool operator!=(const graph<T>&,const graph<T>&);
-    private:
-        std::vector<vertex<T>> vertices;
-        std::vector<edge<T>> edges;
-        int size;
-    public:
-        graph<T>() : size(0){};
-        /*graph<T>(const graph<T>&);*/
-        
-        /*void operator+(const graph<T>&);
-        graph<T>& operator+=(const graph<T>&);*/
-        void insert_vertex(T);
-        void insert_edge(int,T,T,bool bidirectional = true);
-        std::vector<vertex<T>> get_vertex_set();
-        std::vector<edge<T>> get_edge_set();
-        void erase_vertex(T);
-        void erase_edge(T,T);
-        /*int get_number_of_vertex();
-        void DFS();
-        void BFS();
-        int find_path(T,T);*/
-        void print_graph();
+class graph {
+	friend std::ostream& operator<<(std::ostream& os, const graph&);
+private:
+	std::vector<vertex> vertices;
+public:
+	graph() {};
+	void insert_vertex(int);
+	void insert_edge(int, int,int);
+	void erase_vertex(int);
+	void erase_edge(int, int);
+	std::vector<int> get_vertex_set();
+	std::vector<std::vector<int>> get_edge_set();
+
 };
+
