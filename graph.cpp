@@ -1,180 +1,165 @@
 #include "graph.h"
+#include <iostream>
 
-template<class T>
-bool operator==(const graph<T>& gr1,const graph<T>& gr2) {
-    return (gr1.edges == gr2.edges && gr1.vertices == gr2.vertices);
+
+void graph::insert_vertex(int vertex_value) {
+	auto vertex_count = this->vertices.size(); // quantity of vertices in graph
+	for (int i = 0; i < vertex_count; ++i) {  // checking if such vertex already exists
+		if (this->vertices[i].value == vertex_value) {
+			// found vertex with the same value
+			// exit process,nothing was done
+			return;
+		}
+	}
+	//check over,no such vertex
+	vertex* new_vertex = new vertex(vertex_value); // creating new vertex
+	this->vertices.push_back(*new_vertex); // adding it to vertices set of graph
 }
 
-template<class T>
-bool operator!=(const graph<T>& gr1, const graph<T>& gr2) {
-    return (gr1.edges != gr2.edges or gr1.vertices != gr2.vertices);
+void graph::insert_edge(int vertex1, int vertex2,int weight) {
+	auto vertex_count = this->vertices.size(); // quantity of vertices in graph
+	int index_of_vertex1 = 0;
+	// checking vertex1 and vertex2 existence
+	for (int i = 0; i < vertex_count; ++i) {  
+		if (this->vertices[i].value == vertex1) {
+			index_of_vertex1 = i; // saving vertex1 index in vertices set
+			break;
+		}
+		else if (i == vertex_count - 1) {
+			return;
+		}
+	}
+	for (int i = 0; i < vertex_count; ++i) { 
+		if (this->vertices[i].value == vertex2) {
+			break;
+		}
+		else if (i == vertex_count - 1) {
+			return;
+		}
+	}
+	// check over,vertices exist
+	adjacent_vertex* ptr = this->vertices[index_of_vertex1].connections_head;
+	if (ptr) {
+		while (ptr->connect) { //ptr for iterating on adjacency list of vertex1
+			if (ptr->value == vertex2) return; // edge between vertex1 and vertex2 already exists
+			ptr = ptr->connect;
+		}
+		adjacent_vertex* new_adj_ver = new adjacent_vertex; //creating new adjacent vertex
+		new_adj_ver->value = vertex2;
+		new_adj_ver->weight = weight;
+		ptr->connect = new_adj_ver; // adding it to the end of vertex1 adjacecny list
+	}
+	else {
+		adjacent_vertex* new_adj_ver = new adjacent_vertex; //creating new adjacent vertex
+		new_adj_ver->value = vertex2;
+		new_adj_ver->weight = weight;
+		this->vertices[index_of_vertex1].connections_head = new_adj_ver; // adding it to the end of vertex1 adjacecny list
+	}
 }
 
-//template<class T>
-//void graph<T>::operator+(const graph<T>&);
-//
-//template<class T>
-//graph<T>& operator+=(const graph<T>&);
-
-//template<class T>
-//std::ostream& operator<<(const std::ostream& os, const graph<T>& g) {
-//    os << "G = (V,E)\n" << "\nV = {";
-//    
-//    return os;
-//}
-
-template<class T>
-void graph<T>::insert_vertex(T new_vertex_val){
-    for (auto it = this->vertices.begin(); it != this->vertices.end(); ++it) {
-        if ((*it).value == new_vertex_val) {
-            std::cout << "Vertex " << new_vertex_val << " already exists." << std::endl;
-            return;
-        }
-    }
-    vertex<T> new_vx_val(new_vertex_val);
-    this->vertices.push_back(new_vx_val);
-    ++(this->size);
+void graph::erase_vertex(int vertex_value) {
+	auto vertex_count = this->vertices.size(); // quantity of vertices in graph
+	int index_of_vertex = 0;
+	for (int i = 0; i < vertex_count; ++i) { // checking if such vertex exists
+		if (this->vertices[i].value == vertex_value) {
+			index_of_vertex = i; // saving vertex index
+			break;
+		}
+		if (i == vertex_count - 1) {
+			return; // no such vertex to delete
+		}
+	}
+	//check over,vertex exists
+	// deleting all connections with vertex
+	for (int i = 0; i < vertex_count; ++i) {
+		this->erase_edge(vertex_value, this->vertices[i].value);
+		this->erase_edge(this->vertices[i].value, vertex_value);
+	}
+	while (this->vertices[index_of_vertex].connections_head) { // deleting vertex adjacency list
+		adjacent_vertex* ptr = this->vertices[index_of_vertex].connections_head;
+		this->vertices[index_of_vertex].connections_head = this->vertices[index_of_vertex].connections_head->connect;
+		delete ptr;
+	}
+	// adjacency list deleted
+	this->vertices.erase(this->vertices.begin() + index_of_vertex);// deleting vertex from vertices set
 }
 
-template<class T>
-void graph<T>::insert_edge(int weight,T v1,T v2,bool bidirectional){
-    vertex<T> ver1;
-    vertex<T> ver2;
-    for (auto it = this->vertices.begin(); it != this->vertices.end(); ++it) {
-        if ((*it).value == v1) {
-            ver1 = *it;
-        }
-        if ((*it).value == v2) {
-            ver2 = *it;
-        }
-    }        
-    if (ver1.value == v1 && ver2.value == v2) {
-        for (auto it = this->edges.begin(); it != this->edges.end(); ++it) {
-            if ((*it).left == v1 && (*it).right == v2) {
-                std::cout << "Edge already exists." << std::endl;
-                return;
-            }
-        }
-        edge<T> new_edge(weight,v1,v2);
-        this->edges.push_back(new_edge);
-        if (bidirectional) {
-            ver1.links.push_back(ver2);
-            ver2.links.push_back(ver1);
-        }
-        else {
-            ver1.links.push_back(ver2);
-        }
-    }
-    else {
-        std::cout << "No vertices to connect." << std::endl;
-        return;
-    }
+void graph::erase_edge(int vertex1, int vertex2) {
+	if (vertex1 == vertex2) return;
+	auto vertex_count = this->vertices.size(); // quantity of vertices in graph
+	int index_of_vertex1 = 0;
+	//checking vertex1 and vertex2 existence
+	for (int i = 0; i < vertex_count; ++i) {
+		if (this->vertices[i].value == vertex1) {
+			index_of_vertex1 = i; // saving vertex1 index in vertices set
+			break;
+		}
+		else if (i == vertex_count - 1) {
+			return;
+		}
+	}
+	for (int i = 0; i < vertex_count; ++i) {
+		if (this->vertices[i].value == vertex2) {
+			break;
+		}
+		else if (i == vertex_count - 1) {
+			return;
+		}
+	}
+	// check over,vertices exist
+	//checking edge existence between vertex1 and vertex2 and deleting
+	adjacent_vertex* ptr = this->vertices[index_of_vertex1].connections_head;
+	adjacent_vertex* ptr_previous = this->vertices[index_of_vertex1].connections_head;
+	while (ptr) {
+		if (this->vertices[index_of_vertex1].connections_head->value == vertex2) {
+			this->vertices[index_of_vertex1].connections_head = this->vertices[index_of_vertex1].connections_head->connect;
+			return;
+		}
+		if (ptr->value == vertex2 && ptr->connect == nullptr) {
+			ptr_previous->connect = nullptr;
+			return;
+		}
+		if (ptr->value == vertex2) {
+			ptr_previous->connect = ptr->connect;
+			ptr->connect = nullptr;
+			return;
+		}
+		ptr_previous = ptr;
+		ptr = ptr->connect;
+	}
+	return;
 }
 
-template<class T>
-std::vector<vertex<T>> graph<T>::get_vertex_set() {
-    return this->vertices;
+std::vector<int> graph::get_vertex_set() {
+	std::vector<int> vertices;
+	for (int i = 0; i < this->vertices.size(); ++i) {
+		vertices.push_back(this->vertices[i].value);
+	}
+	return vertices;
 }
 
-template<class T>
-std::vector<edge<T>> graph<T>::get_edge_set() {
-    return this->edges;
+std::vector<std::vector<int>> graph::get_edge_set() {
+	std::vector<int> edge;
+	std::vector<std::vector<int>> edge_set;
+	return edge_set;
 }
 
-template<class T>
-void graph<T>::erase_vertex(T vertex) {
-    for (auto it1 = this->vertices.begin(); it1 != this->vertices.end(); ++it1) {
-        if ((*it1).value == vertex) {
-            if (it1 + 1 == this->vertices.end()) {
-                this->vertices.pop_back();
-            }
-            else this->vertices.erase(it1);
-            break;
-        }
-    }
-    for (auto it2 = this->edges.begin(); it2 != this->edges.end(); ++it2) {
-        if ((*it2).right == vertex || (*it2).left == vertex) {
-            if (it2 + 1 == this->edges.end()) {
-                this->edges.pop_back();
-            }
-            else this->edges.erase(it2);
-            break;
-        }
-    }
-    for (auto it3 = this->vertices.begin(); it3 != this->vertices.end(); ++it3) {
-        for (auto it4 = (*it3).links.begin(); it4 != (*it3).links.end(); ++it4) {
-            if ((*it4).value == vertex) {
-                if (it4 + 1 == (*it3).links.end()) {
-                    (*it3).links.pop_back();
-                }
-                else (*it3).links.pop_back();
-                break;
-            }
-        }
-    }
-}
 
-template<class T>
-void graph<T>::erase_edge(T v1, T v2) {
-    for (auto it1 = this->edges.begin(); it1 != this->edges.end(); ++it1) {
-        if ((*it1).left == v1 && (*it1).right == v2 || (*it1).left == v2 && (*it1).right == v1) {
-            if (it1 + 1 == this->edges.end()) {
-                this->edges.pop_back();
-            }
-            else this->edges.erase(it1);
-            break;
-        }
-    }
-    for (auto it2 = this->vertices.begin(); it2 != this->vertices.end(); ++it2) {
-        if ((*it2).value == v1) {
-            for (auto it4 = (*it2).links.begin(); it4 != (*it2).links.end(); ++it4) {
-                if ((*it4).value == v2) {
-                    if (it4 + 1 == (*it2).links.end()) {
-                        (*it2).links.pop_back();
-                    }
-                    else (*it2).links.erase(it4);
-                    break;
-                }
-            }
-        }
-        if ((*it2).value == v2) {
-            for (auto it5 = (*it2).links.begin(); it5 != (*it2).links.end(); ++it5) {
-                if ((*it5).value == v1) {
-                    if (it5 + 1 == (*it2).links.end()) {
-                        (*it2).links.pop_back();
-                    }
-                    else (*it2).links.erase(it5);
-                    break;
-                }
-            }
-        }
-    }
-}
-
-//template<class T>
-//int graph<T>::get_number_of_vertex();
-//
-//template<class T>
-//void graph<T>::DFS();
-//
-//template<class T>
-//void graph<T>::BFS();
-//
-//template<class T>
-//int graph<T>::find_path(T,T);
-
-template <class T>
-void graph<T>::print_graph() {
-    std::vector<vertex<char>> vertices = this->get_vertex_set();
-    std::vector<edge<char>> edge = this->get_edge_set();
-    std::cout << "G = (V,E)" << std::endl;
-    std::cout << "V = {";
-    for (auto it = vertices.begin(); it != vertices.end(); ++it) {
-        std::cout << ' ' << (*it).value;
-    }
-    std::cout << " }" << std::endl << "E = { ";
-    for (auto it = edges.begin(); it != edges.end(); ++it) {
-        std::cout << "(" << (*it).left << "," << (*it).right << ") ";
-    }
-    std::cout << "}" << std::endl;
+std::ostream& operator<<(std::ostream& os, const graph& g) {
+	os << "G = (V,E)\n";
+	os << "V = {";
+	for (int i = 0; i < g.vertices.size(); ++i) {
+		os << " " << g.vertices[i].value;
+	}
+	os << " }\n";
+	os << "E = {";
+	for (int i = 0; i < g.vertices.size(); ++i) {
+		adjacent_vertex* ptr = g.vertices[i].connections_head;
+		while (ptr) {
+			os << " (" << g.vertices[i].value << "," << ptr->value << ")";
+			ptr = ptr->connect;
+		}
+	}
+	os << " }\n";
+	return os;
 }
