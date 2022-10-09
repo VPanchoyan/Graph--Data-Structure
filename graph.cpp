@@ -1,4 +1,5 @@
 #include "graph.h"
+#include <queue>
 #include <iostream>
 
 
@@ -141,8 +142,74 @@ std::vector<int> graph::get_vertex_set() {
 std::vector<std::vector<int>> graph::get_edge_set() {
 	std::vector<int> edge;
 	std::vector<std::vector<int>> edge_set;
+
 	return edge_set;
 }
+
+void graph::BFS(int start_vertex) {
+	std::queue<int> vertex_queue;
+	int start_vertex_index = 0;
+	for (int i = 0; i < this->vertices.size(); ++i) {
+		if (this->vertices[i].value == start_vertex) {
+			start_vertex_index = i;
+			break;
+		}
+		if (i == this->vertices.size() - 1) {
+			// no such vertex
+			return;
+		}
+	}
+	// vertex exists
+	vertex_queue.push(this->vertices[start_vertex_index].value);
+	std::cout << "BFS from " << start_vertex << ": ";
+	int size = this->vertices.size();
+	std::vector<bool> visited_vertices(size,false);
+	visited_vertices[start_vertex_index] = true;
+	while (!vertex_queue.empty()) {
+		adjacent_vertex* ptr = this->vertices[start_vertex_index].connections_head;
+		while (ptr) {
+			int index = 0;
+			for (int i = 0; i < size; ++i) {
+				if (this->vertices[i].value == ptr->value) {
+					index = i;
+					break;
+				}
+			}
+			if (!visited_vertices[index]) {
+				vertex_queue.push(ptr->value);
+				visited_vertices[index] = true;
+			}
+			ptr = ptr->connect;
+		}
+		std::cout << vertex_queue.front() << " ";
+		vertex_queue.pop();
+		if (vertex_queue.empty()) return;
+		int next_vertex = vertex_queue.front();
+		for (int i = 0; i < size; ++i) {
+			if (this->vertices[i].value == next_vertex) {
+				start_vertex_index = i;
+				visited_vertices[start_vertex_index] = true;
+				break;
+			}
+		}	
+	}
+	std::cout << std::endl;
+}
+
+
+
+bool graph::operator==(const graph& g) {
+	return true;
+}
+
+bool graph::operator!=(const graph& g) {
+	return true;
+}
+
+graph& graph::operator=(const graph& g) {
+	return *this;
+}
+
 
 
 std::ostream& operator<<(std::ostream& os, const graph& g) {
