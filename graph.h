@@ -33,5 +33,6 @@ public:
 	bool operator==(const graph&);
 	bool operator!=(const graph&);
 	void BFS(int);
+	void DFS(int);
 };
 
