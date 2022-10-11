@@ -35,21 +35,20 @@ void Graph<T>::print_vertices() {
 	std::cout << " }\n";
 }
 
-template<class T>
-Graph<T>::Graph(std::initializer_list<std::pair<T, std::initializer_list<T>>> list) {
-	for (auto it : list) {
-		this->_vertices.insert((*it).first);
-		for (auto iter = (*it).second.begin(); iter != (*it).second.end();++iter) {
-			this->insert_edge((*it)->first, *iter,1);
-		}
-	}
-}
+//template<class T>
+//Graph<T>::Graph(std::initializer_list<std::pair<T, std::initializer_list<T>>> list) {
+//	for (auto it : list) {
+//		this->_vertices.insert((*it).first);
+//		for (auto iter = (*it).second.begin(); iter != (*it).second.end();++iter) {
+//			this->insert_edge((*it)->first, *iter,1);
+//		}
+//	}
+//}
 
 template<class T>
 void Graph<T>::insert_vertex(T value) {
 	std::list<Edge<T>> adjacents;
 	this->_vertices.insert({ value, adjacents });
-	++this->_size;
 }
 
 template<class T>
@@ -59,7 +58,6 @@ void Graph<T>::insert_edge(T vertex1, T vertex2,int weight) {
 	this->insert_vertex(vertex2);
 	Edge<T> new_edge(vertex1,vertex2, weight);
 	this->_vertices.at(vertex1).push_back(new_edge);
-	//this->_size = this->get_vertex_set().size();
 }
 
 template<class T>
@@ -83,7 +81,6 @@ void Graph<T>::erase_vertex(T vertex) {
 		erase_edge(it.first, vertex);
 	}
 	this->_vertices.erase(vertex);
-	--this->_size;
 }
 
 template<class T>
@@ -112,7 +109,7 @@ void Graph<T>::erase_edge(T vertex1, T vertex2) {
 
 template<class T>
 int Graph<T>::get_number_of_vertex() {
-	return this->_size;
+	return this->get_vertex_set().size();
 }
 
 template<class T>
@@ -134,14 +131,29 @@ void Graph<T>::BFS(T start_vertex) {
 	// check over,vertex exists
 	std::queue<T> vert_queue;
 	std::vector<T> visited_vertices;
-	T current_vertex = start_vertex;
-	visited_vertices.push_back(current_vertex);
+	visited_vertices.push_back(start_vertex);
 	std::cout << "BFS from " << start_vertex << " vertex: ";
-	vert_queue.push(start_vertex);
-	while (!vert_queue.empty()) {
+	std::cout << start_vertex << " ";
+	while (true) {
+		for (auto it = this->_vertices.at(start_vertex).begin(); it != this->_vertices.at(start_vertex).end(); ++it) {
+			bool ok_to_visit = true;
+			for (int i = 0; i < visited_vertices.size(); ++i) {
+				if (visited_vertices[i] == (*it)._vertex2) {
+					ok_to_visit = false;
+					break;
+				}
+			}
+			if (ok_to_visit) {
+				vert_queue.push((*it)._vertex2);
+			}
+		}
 		std::cout << vert_queue.front() << " ";
 		vert_queue.pop();
-
+		if (vert_queue.empty()) {
+			std::cout << std::endl;
+			return;
+		}
+		start_vertex = vert_queue.front();
 	}
 }
 
