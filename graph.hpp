@@ -13,37 +13,37 @@ bool Graph<T>::vertex_exists(T value) {
 	return true;
 }
 
-//template<class T>
-//void Graph<T>::print_edges() {
-//	std::cout << "E = {";
-//	std::vector<std::tuple<T,T,T>> edges = this->get_edge_set();
-//	int size = edges.size();
-//	for (int i = 0; i < size; ++i) {
-//		std::cout << " (" << std::get<0>(this->get_edge_set()[i]) 
-//			<< "," << std::get<1>(this->get_edge_set()[i]) << "," 
-//			<< std::get<2>(this->get_edge_set()[i]) << ")";
-//	}
-//	std::cout << " }\n";
-//}
-//
-//template<class T>
-//void Graph<T>::print_vertices() {
-//	std::cout << "V = {";
-//	for (auto it : this->_vertices) {
-//		std::cout << " " << it.first;
-//	}
-//	std::cout << " }\n";
-//}
+template<class T>
+void Graph<T>::print_edges() {
+	std::cout << "E = {";
+	std::vector<std::tuple<T,T,T>> edges = this->get_edge_set();
+	int size = edges.size();
+	for (int i = 0; i < size; ++i) {
+		std::cout << " (" << std::get<0>(this->get_edge_set()[i]) 
+			<< "," << std::get<1>(this->get_edge_set()[i]) << "," 
+			<< std::get<2>(this->get_edge_set()[i]) << ")";
+	}
+	std::cout << " }\n";
+}
 
-//template<class T>
-//Graph<T>::Graph(std::initializer_list<std::pair<T, std::initializer_list<T>>> list) {
-//	for (auto it : list) {
-//		this->_vertices.insert((*it).first);
-//		for (auto iter = (*it).second.begin(); iter != (*it).second.end();++iter) {
-//			this->insert_edge((*it)->first, *iter,1);
-//		}
-//	}
-//}
+template<class T>
+void Graph<T>::print_vertices() {
+	std::cout << "V = {";
+	for (auto it : this->_vertices) {
+		std::cout << " " << it.first;
+	}
+	std::cout << " }\n";
+}
+
+template<class T>
+Graph<T>::Graph(std::initializer_list<std::pair<T, std::initializer_list<T>>> list) {
+	for (auto it : list) {
+		this->_vertices.insert((*it).first);
+		for (auto iter = (*it).second.begin(); iter != (*it).second.end();++iter) {
+			this->insert_edge((*it)->first, *iter,1);
+		}
+	}
+}
 
 template<class T>
 void Graph<T>::insert_vertex(T value) {
