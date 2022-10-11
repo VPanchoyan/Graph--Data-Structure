@@ -6,6 +6,27 @@
 #include <iostream>
 
 template<class T>
+bool Contains(std::queue<T> q, T x) {
+	while (!q.empty()) {
+		if (q.front() == x) {
+			return true;
+		}
+		q.pop();
+	}
+	return false;
+}
+
+template<class T>
+bool is_visited(std::vector<T>& vec, T val) {
+	for (int i = 0; i < vec.size(); ++i) {
+		if (vec[i] == val) {
+			return true;
+		}
+	}
+	return false;
+}
+
+template<class T>
 bool Graph<T>::vertex_exists(T value) {
 	if (this->_vertices.find(value) == this->_vertices.end()) {
 		return false;
@@ -132,19 +153,14 @@ void Graph<T>::BFS(T start_vertex) {
 	std::queue<T> vert_queue;
 	std::vector<T> visited_vertices;
 	visited_vertices.push_back(start_vertex);
+	vert_queue.push(start_vertex);
 	std::cout << "BFS from " << start_vertex << " vertex: ";
-	std::cout << start_vertex << " ";
-	while (true) {
+	while (!vert_queue.empty()) {
 		for (auto it = this->_vertices.at(start_vertex).begin(); it != this->_vertices.at(start_vertex).end(); ++it) {
-			bool ok_to_visit = true;
-			for (int i = 0; i < visited_vertices.size(); ++i) {
-				if (visited_vertices[i] == (*it)._vertex2) {
-					ok_to_visit = false;
-					break;
-				}
-			}
-			if (ok_to_visit) {
-				vert_queue.push((*it)._vertex2);
+			// add vertex to queue if it is not visited
+			// and is not already in queue
+			if (!is_visited(visited_vertices, (*it)._vertex2)) {
+				if(!Contains(vert_queue, (*it)._vertex2)) vert_queue.push((*it)._vertex2);
 			}
 		}
 		std::cout << vert_queue.front() << " ";
@@ -154,6 +170,7 @@ void Graph<T>::BFS(T start_vertex) {
 			return;
 		}
 		start_vertex = vert_queue.front();
+		visited_vertices.push_back(start_vertex);
 	}
 }
 
