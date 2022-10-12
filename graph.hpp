@@ -167,15 +167,22 @@ int Graph<T>::get_number_of_vertex() {
 	return this->get_vertex_set().size();
 }
 
-//template<class T>
-//bool Graph<T>::operator==(const Graph<T>& compare_graph) {
-//	return (this->_vertices == compare_graph._vertices);
-//}
-//
-//template<class T>
-//bool Graph<T>::operator!=(const Graph<T>& compare_graph) {
-//	return !this->operator==(compare_graph);
-//}
+template<class T>
+bool Graph<T>::operator==(const Graph<T>& compare_graph) {
+	Graph<T> compare = compare_graph;
+	if (this->get_vertex_set() != compare.get_vertex_set()) {
+		return false;
+	}
+	if (this->get_edge_set() != compare.get_edge_set()) {
+		return false;
+	}
+	return true;
+}
+
+template<class T>
+bool Graph<T>::operator!=(const Graph<T>& compare_graph) {
+	return !this->operator==(compare_graph);
+}
 
 template<class T>
 void Graph<T>::BFS(T start_vertex) {
@@ -227,22 +234,44 @@ void Graph<T>::DFS(T start_vertex) {
 }
 
 template<class T>
-void Graph<T>::find_path(T vertex1, T vertex2) {
+int Graph<T>::find_path(T vertex1, T vertex2) {
 	// checking if vertices exist
-	if (!this->vertex_exists(vertex1) || !this->vertex_exists(vertex2)) return;
+	if (!this->vertex_exists(vertex1) || !this->vertex_exists(vertex2)) return 0;
 	// check over,vertices exist
-	//std::unordered_map<T, int> paths;
-	//for (auto it : this->get_vertex_set()) {
-	//	paths.insert({ *it,0 });
-	//}
-	//for (auto it : this->get_vertex_set()) {
-	//	for (auto iter : this->_vertices.at(*it)) {
-	//		paths.at((*iter)._vertex2) = (*iter).weight;
-	//	}
-	//}
-	std::vector<std::pair<std::tuple<T, T, T>,bool>> edges = this->get_edge_set();
-	std::vector<std::pair<std::vector<T>, int>> paths;
-	
+	std::queue<T> vert_queue;
+	std::vector<T> visited_vertices;
+	std::unordered_map<T, int> paths;
+	visited_vertices.push_back(vertex1);
+	vert_queue.push(vertex1);
+	// sort by BFS algorithm
+	while (!vert_queue.empty()) {
+		for (auto it = this->_vertices.at(vertex1).begin(); it != this->_vertices.at(vertex1).end(); ++it) {
+			insert_in_queue_if_unique(vert_queue, visited_vertices, (*it)._vertex2);
+		}
+		paths.insert({ vert_queue.front(), 0 });
+		vert_queue.pop();
+		if (vert_queue.empty()) {
+			std::cout << std::endl;
+			break;
+		}
+		vertex1 = vert_queue.front();
+		visited_vertices.push_back(vertex1);
+	}
+	// if there is no path to vertex2
+	if (!is_visited(visited_vertices, vertex2)) return 0;
+	// such path exists
+	for (auto it1 : paths) {
+		if (it1.first == vertex2) break;
+		for (auto it2 : this->_vertices.at(it1.first)) {
+			if (paths.at(it2._vertex2) == 0 && (it1.second + it2._weight > paths.at(it2._vertex2))) {
+				paths.at(it2._vertex2) = it1.second + it2._weight;
+			}
+			else if (paths.at(it2._vertex2) != 0 && (it1.second + it2._weight < paths.at(it2._vertex2))) {
+				paths.at(it2._vertex2) = it1.second + it2._weight;
+			}
+		}
+	}
+	return paths.at(vertex2);
 }
 
 template<class T>
