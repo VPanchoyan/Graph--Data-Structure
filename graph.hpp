@@ -86,13 +86,8 @@ void Graph<T>::print_vertices() {
 }
 
 //template<class T>
-//Graph<T>::Graph(std::initializer_list<std::pair<T, std::initializer_list<T>>> list) {
-//	for (auto it : list) {
-//		this->_vertices.insert((*it).first);
-//		for (auto iter = (*it).second.begin(); iter != (*it).second.end();++iter) {
-//			this->insert_edge((*it)->first, *iter,1);
-//		}
-//	}
+//Graph<T>::Graph(const Graph&& g) {
+//	
 //}
 
 template<class T>
@@ -232,20 +227,39 @@ void Graph<T>::DFS(T start_vertex) {
 }
 
 template<class T>
+void Graph<T>::find_path(T vertex1, T vertex2) {
+	// checking if vertices exist
+	if (!this->vertex_exists(vertex1) || !this->vertex_exists(vertex2)) return;
+	// check over,vertices exist
+	//std::unordered_map<T, int> paths;
+	//for (auto it : this->get_vertex_set()) {
+	//	paths.insert({ *it,0 });
+	//}
+	//for (auto it : this->get_vertex_set()) {
+	//	for (auto iter : this->_vertices.at(*it)) {
+	//		paths.at((*iter)._vertex2) = (*iter).weight;
+	//	}
+	//}
+	std::vector<std::pair<std::tuple<T, T, T>,bool>> edges = this->get_edge_set();
+	std::vector<std::pair<std::vector<T>, int>> paths;
+	
+}
+
+template<class T>
 std::ostream& operator<<(std::ostream& os, const Graph<T>& graph) {
+	Graph<T> new_gr = graph;
 	os << "G = (V,E)\nV = {";
-	for (auto it : this->_vertices) {
+	for (auto it : graph._vertices) {
 		os << " " << it.first;
 	}
 	os << " }\nE = {";
-	std::vector<std::tuple<T, T, T>> edges = this->get_edge_set();
+	std::vector<std::tuple<T, T, T>> edges = new_gr.get_edge_set();
 	int size = edges.size();
 	for (int i = 0; i < size; ++i) {
-		os << " (" << std::get<0>(this->get_edge_set()[i])
-			<< "," << std::get<1>(this->get_edge_set()[i]) << ","
-			<< std::get<2>(this->get_edge_set()[i]) << ")";
+		os << " (" << std::get<0>(new_gr.get_edge_set()[i])
+			<< "," << std::get<1>(new_gr.get_edge_set()[i]) << ","
+			<< std::get<2>(new_gr.get_edge_set()[i]) << ")";
 	}
 	os << " }\n";
 	return os;
 }
-
