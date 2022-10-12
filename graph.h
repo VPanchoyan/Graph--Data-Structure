@@ -1,8 +1,9 @@
-#pragma once
+#ifndef GRAPH
+#define GRAPH
+
 #include <iostream>
 #include <unordered_map>
 #include <list>
-#include <initializer_list>
 
 template<class T>
 class Graph {
@@ -20,21 +21,6 @@ private:
 	std::unordered_map<T,std::list<Edge<T>>> _vertices;
 public:
 	Graph() : _size(0) {};
-	/*Graph(const Graph<T>&& new_graph) : _size(0), _vertices(NULL) {
-		_vertices = new_graph._vertices;
-		_size = new_graph._size;
-		new_graph._size = 0;
-		new_graph._size = NULL;
-	}
-	Graph<T>& operator=(const Graph<T>&& new_graph) {
-		if (this != new_graph) {
-			_vertices = new_graph._vertices;
-			_size = new_graph._size;
-			new_graph._size = 0;
-			new_graph._size = NULL;
-		}
-		return *this;
-	}*/
 	Graph<T> operator=(const Graph<T>&);
 	void insert_vertex(T value);
 	void insert_edge(T vertex1,T vertex2,int weight);
@@ -52,3 +38,5 @@ public:
 	void print_edges() ;
 	void print_vertices() ;
 };
+
+#endif
