@@ -172,15 +172,15 @@ int Graph<T>::get_number_of_vertex() {
 	return this->get_vertex_set().size();
 }
 
-template<class T>
-bool Graph<T>::operator==(const Graph<T>& compare_graph) {
-	return (this->_vertices == compare_graph._vertices);
-}
-
-template<class T>
-bool Graph<T>::operator!=(const Graph<T>& compare_graph) {
-	return !this->operator==(compare_graph);
-}
+//template<class T>
+//bool Graph<T>::operator==(const Graph<T>& compare_graph) {
+//	return (this->_vertices == compare_graph._vertices);
+//}
+//
+//template<class T>
+//bool Graph<T>::operator!=(const Graph<T>& compare_graph) {
+//	return !this->operator==(compare_graph);
+//}
 
 template<class T>
 void Graph<T>::BFS(T start_vertex) {
