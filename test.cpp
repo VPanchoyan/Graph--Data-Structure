@@ -20,7 +20,7 @@ int main() {
 	t = g;
 	t.print_vertices();
 	t.print_edges();
-	//std::cout << t;
+	//std::cout << (g == t);
 	//g.BFS(2);
 	//g.DFS(1);
 	return 0;
