@@ -4,10 +4,6 @@
 #include <list>
 #include <initializer_list>
 
-
-
-
-
 template<class T>
 class Graph {
 	template<class S>
