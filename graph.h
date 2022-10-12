@@ -22,8 +22,7 @@ private:
 public:
 	Graph() : _size(0) {};
 	//Graph(std::initializer_list<std::pair<T, std::initializer_list<T>>> list);
-	//graph(const graph& graph_to_copy) {	this->vertices = graph_to_copy.vertices;}; 
-	//graph& operator=(const graph&); // copy operator assingment
+	Graph<T> operator=(const Graph<T>&);
 	void insert_vertex(T value);
 	void insert_edge(T vertex1,T vertex2,int weight);
 	void erase_vertex(T vertex);
