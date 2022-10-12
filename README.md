@@ -56,7 +56,7 @@ More information about BFS and DFS: [https://www.geeksforgeeks.org/difference-be
 ### My implementation
 My implementation is for directed and weighted graphs.
 In this implementation is used adjacency list.
-Other data structures used: unordered_map, queue, stack, list
+Other data structures used: unordered_map, queue, stack, list, vector
 
 #### Defined operators
 
