@@ -25,7 +25,11 @@ int main() {
 	g.insert_edge(6, 8, 1);
 	g.insert_edge(7, 8, 2);
 	std::cout << g;
-	g.BFS(2);
+	g.BFS(1);
 	g.DFS(1);
+
+	Graph<int> t = g;
+	std::cout << (g == t) << std::endl;
+	std::cout << (g != t);
 	return 0;
 }
