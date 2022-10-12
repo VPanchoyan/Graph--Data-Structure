@@ -43,11 +43,11 @@ public:
 	std::vector<T> get_vertex_set();
 	std::vector<std::tuple<T,T,T>> get_edge_set();
 	bool operator==(const Graph&);
-	//bool operator!=(const Graph&);
+	bool operator!=(const Graph&);
 	int get_number_of_vertex();
 	void BFS(T start_vertex);
 	void DFS(T start_vertex);
-	void find_path(T vertex1, T vertex2);
+	int find_path(T vertex1, T vertex2);
 	bool vertex_exists(T vertex);
 	void print_edges() ;
 	void print_vertices() ;
