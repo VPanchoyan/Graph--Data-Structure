@@ -85,11 +85,6 @@ void Graph<T>::print_vertices() {
 	std::cout << " }\n";
 }
 
-//template<class T>
-//Graph<T>::Graph(const Graph&& g) {
-//	
-//}
-
 template<class T>
 Graph<T> Graph<T>::operator=(const Graph<T>& graph) {
 	this->_vertices = graph._vertices;
