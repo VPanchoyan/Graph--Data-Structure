@@ -44,6 +44,26 @@ bool Graph<T>::vertex_exists(T value) {
 }
 
 template<class T>
+void insert_in_queue_if_unique(std::queue<T>& q, std::vector<T>& vec, T& val) {
+	// add vertex to queue if it is not visited
+	// and is not already in queue
+	if (!is_visited(vec, val)) {
+		if (!Contains(q, val)) q.push(val);
+	}
+}
+
+template<class T>
+void insert_in_stack_if_unique(std::stack<T>& s, std::vector<T>& vec, T& val) {
+	// add vertex to stack if it is not visited
+	// and is not already in stack
+	if (!is_visited(vec, val)) {
+		if (!Contains(s, val)) {
+			s.push(val);
+		}
+	}
+}
+
+template<class T>
 void Graph<T>::print_edges() {
 	std::cout << "E = {";
 	std::vector<std::tuple<T,T,T>> edges = this->get_edge_set();
@@ -105,7 +125,7 @@ std::vector<std::tuple<T, T, T>> Graph<T>::get_edge_set() {
 
 template<class T>
 void Graph<T>::erase_vertex(T vertex) {
-	// of vertex doesn`t exist, nothing to delete
+	// if vertex doesn`t exist, nothing to delete
 	if (!this->vertex_exists(vertex)) {
 		return;
 	}
@@ -158,10 +178,8 @@ bool Graph<T>::operator!=(const Graph<T>& compare_graph) {
 
 template<class T>
 void Graph<T>::BFS(T start_vertex) {
-	// checking vertex existence
-	if (!this->vertex_exists(start_vertex)) {
-		return;
-	}
+	// check vertex existence
+	if (!this->vertex_exists(start_vertex)) return;
 	// check over,vertex exists
 	std::queue<T> vert_queue;
 	std::vector<T> visited_vertices;
@@ -170,11 +188,7 @@ void Graph<T>::BFS(T start_vertex) {
 	std::cout << "BFS from " << start_vertex << " vertex: ";
 	while (!vert_queue.empty()) {
 		for (auto it = this->_vertices.at(start_vertex).begin(); it != this->_vertices.at(start_vertex).end(); ++it) {
-			// add vertex to queue if it is not visited
-			// and is not already in queue
-			if (!is_visited(visited_vertices, (*it)._vertex2)) {
-				if(!Contains(vert_queue, (*it)._vertex2)) vert_queue.push((*it)._vertex2);
-			}
+			insert_in_queue_if_unique(vert_queue, visited_vertices, (*it)._vertex2);
 		}
 		std::cout << vert_queue.front() << " ";
 		vert_queue.pop();
@@ -189,33 +203,24 @@ void Graph<T>::BFS(T start_vertex) {
 
 template<class T>
 void Graph<T>::DFS(T start_vertex) {
-	// checking vertex existence
-	if (!this->vertex_exists(start_vertex)) {
-		return;
-	}
+	// check vertex existence
+	if (!this->vertex_exists(start_vertex)) return;
 	// check over,vertex exists
 	std::stack<T> vertices_to_visit;
 	std::vector<T> visited_vertices;
 	visited_vertices.push_back(start_vertex);
-	std::cout << "DFS from " << start_vertex << " vertex: ";
-	std::cout << start_vertex << " ";
+	std::cout << "DFS from " << start_vertex << " vertex: " << start_vertex << " ";
 	while (true) {
 		for (auto it = this->_vertices.at(start_vertex).begin(); it != this->_vertices.at(start_vertex).end(); ++it) {
-			// add vertex to stack if it is not visited
-			// and is not already in stack
-			if (!is_visited(visited_vertices, (*it)._vertex2)) {
-				if (!Contains(vertices_to_visit, (*it)._vertex2)) {
-					vertices_to_visit.push((*it)._vertex2);
-				}
-			}
+			insert_in_stack_if_unique(vertices_to_visit, visited_vertices, (*it)._vertex2);
 		}
-		std::cout << vertices_to_visit.top() << " ";
-		vertices_to_visit.pop();
 		if (vertices_to_visit.empty()) {
 			std::cout << std::endl;
 			return;
 		}
+		std::cout << vertices_to_visit.top() << " ";
 		start_vertex = vertices_to_visit.top();
+		vertices_to_visit.pop();
 		visited_vertices.push_back(start_vertex);
 	}
 }
