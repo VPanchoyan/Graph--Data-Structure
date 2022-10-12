@@ -22,8 +22,8 @@ private:
 public:
 	Graph() : _size(0) {};
 	//Graph(std::initializer_list<std::pair<T, std::initializer_list<T>>> list);
-	//graph(const graph& graph_to_copy) {	this->vertices = graph_to_copy.vertices;}; // copy operator assingment
-	//graph& operator=(const graph&); // move operator assignment
+	//graph(const graph& graph_to_copy) {	this->vertices = graph_to_copy.vertices;}; 
+	//graph& operator=(const graph&); // copy operator assingment
 	void insert_vertex(T value);
 	void insert_edge(T vertex1,T vertex2,int weight);
 	void erase_vertex(T vertex);
@@ -34,9 +34,8 @@ public:
 	bool operator!=(const Graph&);
 	int get_number_of_vertex();
 	void BFS(T start_vertex);
-	//void DFS(Tstart_vertex);
+	void DFS(T start_vertex);
 	//void find_path(T vertex1, T vertex2);
-
 	bool vertex_exists(T vertex);
 	void print_edges();
 	void print_vertices();
