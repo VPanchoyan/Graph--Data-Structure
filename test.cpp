@@ -16,8 +16,12 @@ int main() {
 	g.insert_edge(3, 5, 1);
 	g.print_vertices();
 	g.print_edges();
+	Graph<int> t;
+	t = g;
+	t.print_vertices();
+	t.print_edges();
 	//std::cout << t;
-	g.BFS(2);
-	g.DFS(1);
+	//g.BFS(2);
+	//g.DFS(1);
 	return 0;
 }
