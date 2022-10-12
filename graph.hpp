@@ -70,7 +70,7 @@ void Graph<T>::print_edges() {
 	int size = edges.size();
 	for (int i = 0; i < size; ++i) {
 		std::cout << " (" << std::get<0>(this->get_edge_set()[i]) 
-			<< "," << std::get<1>(this->get_edge_set()[i]) << "," 
+			<< "," << std::get<1>(this->get_edge_set()[i]) << ", w = " 
 			<< std::get<2>(this->get_edge_set()[i]) << ")";
 	}
 	std::cout << " }\n";
@@ -94,6 +94,12 @@ void Graph<T>::print_vertices() {
 //		}
 //	}
 //}
+
+template<class T>
+Graph<T> Graph<T>::operator=(const Graph<T>& graph) {
+	this->_vertices = graph._vertices;
+	return *this;
+}
 
 template<class T>
 void Graph<T>::insert_vertex(T value) {
