@@ -1,4 +1,4 @@
-# Lab-projects
+# Graph Data Structure
 
 ## Graph 
 
